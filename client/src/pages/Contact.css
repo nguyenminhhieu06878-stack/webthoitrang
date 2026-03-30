@@ -1,0 +1,260 @@
+.contact-content {
+  background: #fff;
+}
+
+/* Google Maps */
+.contact-map {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.contact-map iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Contact Main */
+.contact-main {
+  padding: 60px 0 80px;
+}
+
+.contact-main .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+}
+
+/* Left Side - Contact Info */
+.contact-info {
+  padding-right: 40px;
+}
+
+.contact-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.contact-details {
+  margin-bottom: 40px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.contact-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.contact-value {
+  font-size: 14px;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.contact-value:hover {
+  color: #666;
+}
+
+/* Social Icons */
+.contact-social {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  background: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.social-link:hover {
+  background: #1a1a1a;
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* Right Side - Contact Form */
+.contact-form-wrapper {
+  background: #fafafa;
+  padding: 40px;
+  border-radius: 4px;
+}
+
+.form-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 30px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  transition: border-color 0.3s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #1a1a1a;
+}
+
+.form-control::placeholder {
+  color: #999;
+}
+
+select.form-control {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* reCAPTCHA Placeholder */
+.recaptcha-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.recaptcha-placeholder input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.recaptcha-placeholder label {
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Submit Button */
+.btn-submit {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 4px;
+}
+
+.btn-submit:hover {
+  background: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contact-grid {
+    gap: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-map {
+    height: 300px;
+  }
+
+  .contact-main {
+    padding: 40px 0 60px;
+  }
+
+  .contact-main .container {
+    padding: 0 20px;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .contact-info {
+    padding-right: 0;
+  }
+
+  .contact-form-wrapper {
+    padding: 30px 20px;
+  }
+
+  .contact-heading {
+    font-size: 20px;
+  }
+
+  .form-heading {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-heading {
+    font-size: 18px;
+  }
+
+  .btn-submit {
+    width: 100%;
+  }
+}

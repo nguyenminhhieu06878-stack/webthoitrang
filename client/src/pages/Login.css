@@ -1,0 +1,264 @@
+.login-page {
+  min-height: 100vh;
+  background: #fff;
+}
+
+/* Breadcrumb */
+.login-page .breadcrumb {
+  background: #f8f8f8;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+.login-page .breadcrumb .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.login-page .breadcrumb a {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.login-page .breadcrumb a:hover {
+  color: #1a1a1a;
+}
+
+.login-page .breadcrumb .separator {
+  margin: 0 10px;
+  color: #999;
+}
+
+.login-page .breadcrumb .current {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Login Content */
+.login-content {
+  padding: 40px 0 80px;
+}
+
+.login-content .container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.login-box {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Left Column - Social Buttons */
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.btn-facebook,
+.btn-google {
+  padding: 12px 18px;
+  border: none;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn-facebook {
+  background: #3b5998;
+}
+
+.btn-facebook:hover {
+  background: #2d4373;
+}
+
+.btn-google {
+  background: #db4437;
+}
+
+.btn-google:hover {
+  background: #c23321;
+}
+
+/* Right Column - Form */
+.login-form-wrapper {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 4px;
+  border: 1px solid #e8e8e8;
+}
+
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.login-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.register-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.3s;
+}
+
+.register-link:hover {
+  color: #1a1a1a;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-group label svg {
+  color: #666;
+  width: 14px;
+  height: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'Montserrat', sans-serif;
+  background: white;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #1a1a1a;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.btn-login {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 10px 35px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-login:hover {
+  background: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.create-account-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.3s;
+}
+
+.create-account-link:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-content {
+    padding: 40px 0 60px;
+  }
+
+  .login-box {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .login-form-wrapper {
+    padding: 30px 20px;
+  }
+
+  .login-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .login-title {
+    font-size: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .btn-login {
+    width: 100%;
+  }
+
+  .create-account-link {
+    text-align: center;
+  }
+}

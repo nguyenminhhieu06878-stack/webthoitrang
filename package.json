@@ -1,0 +1,17 @@
+{
+  "name": "dchic-fashion",
+  "version": "1.0.0",
+  "description": "D'Chic Fashion E-commerce Website",
+  "scripts": {
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
+  },
+  "keywords": ["fashion", "ecommerce"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
