@@ -52,6 +52,12 @@
   cursor: pointer;
 }
 
+.recommendation-card .recommendation-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .recommendation-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);

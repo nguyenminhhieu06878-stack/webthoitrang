@@ -1,6 +1,73 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 import './Register.css'
 
 const Register = () => {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    address: {
+      street: '',
+      city: '',
+      district: '',
+      ward: ''
+    }
+  })
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    
+    if (['province', 'district', 'ward', 'address'].includes(name)) {
+      setFormData(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [name === 'province' ? 'city' : name === 'address' ? 'street' : name]: value
+        }
+      }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (formData.password.length < 6) {
+      toast.error('Mật khẩu phải có ít nhất 6 ký tự')
+      return
+    }
+
+    setLoading(true)
+    
+    try {
+      const response = await axios.post('http://localhost:5001/api/users/register', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        address: formData.address
+      })
+
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.user))
+      
+      toast.success('Đăng ký thành công!')
+      setTimeout(() => {
+        navigate('/')
+      }, 1500)
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Đăng ký thất bại')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <main className="register-page">
       {/* Breadcrumb */}
@@ -47,7 +114,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <form className="register-form">
+              <form className="register-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="fullname">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -59,7 +126,9 @@ const Register = () => {
                   <input 
                     type="text" 
                     id="fullname" 
-                    name="fullname" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     required 
                   />
                 </div>
@@ -74,7 +143,9 @@ const Register = () => {
                   <input 
                     type="tel" 
                     id="phone" 
-                    name="phone" 
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     required 
                   />
                 </div>
@@ -90,7 +161,9 @@ const Register = () => {
                   <input 
                     type="email" 
                     id="email" 
-                    name="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     required 
                   />
                 </div>
@@ -106,7 +179,9 @@ const Register = () => {
                   <input 
                     type="password" 
                     id="password" 
-                    name="password" 
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     required 
                   />
                 </div>
@@ -119,7 +194,13 @@ const Register = () => {
                     </svg>
                     Tỉnh / Thành phố *
                   </label>
-                  <select id="province" name="province" required>
+                  <select 
+                    id="province" 
+                    name="province"
+                    value={formData.address.city}
+                    onChange={handleChange}
+                    required
+                  >
                     <option value="">Chọn Tỉnh / Thành phố</option>
                     <option value="hcm">TP. Hồ Chí Minh</option>
                     <option value="hn">Hà Nội</option>
@@ -137,7 +218,13 @@ const Register = () => {
                     </svg>
                     Quận / Huyện *
                   </label>
-                  <select id="district" name="district" required>
+                  <select 
+                    id="district" 
+                    name="district"
+                    value={formData.address.district}
+                    onChange={handleChange}
+                    required
+                  >
                     <option value="">Chọn Quận / Huyện</option>
                     <option value="q1">Quận 1</option>
                     <option value="q2">Quận 2</option>
@@ -157,7 +244,13 @@ const Register = () => {
                     </svg>
                     Phường / Xã *
                   </label>
-                  <select id="ward" name="ward" required>
+                  <select 
+                    id="ward" 
+                    name="ward"
+                    value={formData.address.ward}
+                    onChange={handleChange}
+                    required
+                  >
                     <option value="">Chọn Phường / Xã</option>
                     <option value="p1">Phường 1</option>
                     <option value="p2">Phường 2</option>
@@ -177,14 +270,18 @@ const Register = () => {
                   </label>
                   <textarea 
                     id="address" 
-                    name="address" 
+                    name="address"
+                    value={formData.address.street}
+                    onChange={handleChange}
                     rows="2"
                     required
                   ></textarea>
                 </div>
 
                 <div className="form-actions">
-                  <button type="submit" className="btn-register">Đăng ký</button>
+                  <button type="submit" className="btn-register" disabled={loading}>
+                    {loading ? 'Đang xử lý...' : 'Đăng ký'}
+                  </button>
                 </div>
               </form>
             </div>

@@ -12,7 +12,7 @@ const CollectionHighlight = () => {
             </div>
             <div className="collection-image-wrapper">
               <img 
-                src="/images/collection-moc-nguyen.jpg" 
+                src="/images/mocnguyen.png" 
                 alt="Mộc Nguyên Collection"
                 className="collection-main-image"
                 onError={(e) => {

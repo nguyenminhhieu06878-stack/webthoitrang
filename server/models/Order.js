@@ -1,76 +1,41 @@
-import mongoose from 'mongoose'
+import { DataTypes } from 'sequelize'
+import sequelize from '../config/database.js'
 
-const orderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+const Order = sequelize.define('Order', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
-  orderItems: [{
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
-    },
-    name: String,
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1
-    },
-    size: String,
-    color: String,
-    price: {
-      type: Number,
-      required: true
-    },
-    image: String
-  }],
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: true  // Allow guest checkout
+  },
+  items: {
+    type: DataTypes.JSON,
+    allowNull: false
+  },
+  totalAmount: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
+    defaultValue: 'pending'
+  },
   shippingAddress: {
-    name: String,
-    phone: String,
-    street: String,
-    city: String,
-    district: String,
-    ward: String,
-    zipCode: String
+    type: DataTypes.JSON,
+    allowNull: false
   },
   paymentMethod: {
-    type: String,
-    required: true,
-    enum: ['COD', 'Banking', 'Momo', 'ZaloPay']
+    type: DataTypes.STRING
   },
   paymentStatus: {
-    type: String,
-    enum: ['Pending', 'Paid', 'Failed'],
-    default: 'Pending'
-  },
-  orderStatus: {
-    type: String,
-    enum: ['Processing', 'Confirmed', 'Shipping', 'Delivered', 'Cancelled'],
-    default: 'Processing'
-  },
-  itemsPrice: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  shippingPrice: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  note: String,
-  deliveredAt: Date
+    type: DataTypes.ENUM('pending', 'paid', 'failed'),
+    defaultValue: 'pending'
+  }
 }, {
   timestamps: true
 })
-
-const Order = mongoose.model('Order', orderSchema)
 
 export default Order

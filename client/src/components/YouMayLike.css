@@ -53,6 +53,12 @@
   transition: transform 0.3s;
 }
 
+.slider-product-card .slider-product-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .slider-product-card:hover {
   transform: translateY(-5px);
 }

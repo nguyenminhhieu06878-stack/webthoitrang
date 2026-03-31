@@ -1,31 +1,44 @@
 import express from 'express'
-import mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import { connectDB } from './config/database.js'
+
+// Import models to sync with database
+import Lookbook from './models/Lookbook.js'
+import Blog from './models/Blog.js'
+import Order from './models/Order.js'
 
 // Import routes
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
+import lookbookRoutes from './routes/lookbookRoutes.js'
+import blogRoutes from './routes/blogRoutes.js'
 
 dotenv.config()
 
 const app = express()
 
-// Middleware
-app.use(cors())
+// CORS Middleware - must be before routes
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dchic-fashion')
-  .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err))
+connectDB()
 
 // Routes
 app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
+app.use('/api/lookbook', lookbookRoutes)
+app.use('/api/blogs', blogRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

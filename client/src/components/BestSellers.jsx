@@ -1,17 +1,27 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import './BestSellers.css'
 
 const BestSellers = () => {
   const sliderRef = useRef(null)
+  const [bestSellers, setBestSellers] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const bestSellers = [
-    { id: 1, code: 'KK186-02', name: 'Đầm chữ A họa tiết hoa cổ thuyền lệch nhún vai', price: 590000, image: '/images/bestseller-1.jpg' },
-    { id: 2, code: 'KK184-23', name: 'Đầm ren kem dự tiệc dáng xòe', price: 600000, image: '/images/bestseller-2.jpg' },
-    { id: 3, code: 'HL34-08', name: 'Đầm công sở dáng xòe lửa sọc xanh cổ V', price: 550000, image: '/images/bestseller-3.jpg' },
-    { id: 4, code: 'ASM30-08', name: 'Áo ren cotton kiểu peplum màu kem', price: 300000, image: '/images/bestseller-4.jpg' },
-    { id: 5, code: 'KK182-25', name: 'Đầm xanh hoa xanh dáng xòe chữ A tay lỡng', price: 530000, image: '/images/bestseller-5.jpg' },
-    { id: 6, code: 'KK184-29', name: 'Đầm xòe tơ thuần cổ trơn chữ A lơ lửng sáng', price: 600000, image: '/images/bestseller-6.jpg' }
-  ]
+  useEffect(() => {
+    fetchBestSellers()
+  }, [])
+
+  const fetchBestSellers = async () => {
+    try {
+      const response = await fetch('http://localhost:5001/api/products?featured=true')
+      const data = await response.json()
+      // Lấy 6 sản phẩm featured
+      setBestSellers(data.slice(0, 6))
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching best sellers:', error)
+      setLoading(false)
+    }
+  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
@@ -25,6 +35,17 @@ const BestSellers = () => {
     } else {
       container.scrollLeft += scrollAmount
     }
+  }
+
+  if (loading) {
+    return (
+      <section className="best-sellers">
+        <div className="container">
+          <h2 className="best-sellers-title">SẢN PHẨM BÁN CHẠY NHẤT</h2>
+          <p style={{ textAlign: 'center', padding: '40px' }}>Đang tải...</p>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -42,11 +63,11 @@ const BestSellers = () => {
           <div className="best-sellers-slider" ref={sliderRef}>
             {bestSellers.map((product) => (
               <div key={product.id} className="bestseller-card">
-                <a href={`/product/${product.code}`} className="bestseller-link">
+                <a href={`/product/${product.code || product.id}`} className="bestseller-link">
                   <div className="bestseller-image">
                     <div className="bestseller-image-placeholder">
                       <img 
-                        src={product.image} 
+                        src={product.images && product.images[0] ? product.images[0] : '/images/placeholder.jpg'} 
                         alt={product.name}
                         onError={(e) => {
                           e.target.style.display = 'none'
@@ -56,7 +77,7 @@ const BestSellers = () => {
                     </div>
                   </div>
                   <div className="bestseller-info">
-                    <p className="bestseller-code">{product.code}</p>
+                    <p className="bestseller-code">{product.code || `P${product.id}`}</p>
                     <h3 className="bestseller-name">{product.name}</h3>
                     <p className="bestseller-price">{formatPrice(product.price)}</p>
                   </div>

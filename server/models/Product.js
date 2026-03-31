@@ -1,66 +1,57 @@
-import mongoose from 'mongoose'
+import { DataTypes } from 'sequelize'
+import sequelize from '../config/database.js'
 
-const productSchema = new mongoose.Schema({
+const Product = sequelize.define('Product', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  code: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
   name: {
-    type: String,
-    required: true,
-    trim: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   description: {
-    type: String,
-    required: true
+    type: DataTypes.TEXT
   },
   price: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  salePrice: {
-    type: Number,
-    min: 0
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
   },
   category: {
-    type: String,
-    required: true,
-    enum: ['Áo', 'Quần', 'Váy', 'Đầm', 'Phụ kiện', 'Giày dép']
+    type: DataTypes.STRING
   },
-  images: [{
-    url: String,
-    alt: String
-  }],
-  sizes: [{
-    type: String,
-    enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-  }],
-  colors: [{
-    name: String,
-    code: String
-  }],
+  images: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  sizes: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  colors: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
   stock: {
-    type: Number,
-    required: true,
-    min: 0,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   featured: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
-  tags: [String],
-  rating: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 5
-  },
-  numReviews: {
-    type: Number,
-    default: 0
+  lookbook: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   timestamps: true
 })
-
-const Product = mongoose.model('Product', productSchema)
 
 export default Product

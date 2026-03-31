@@ -1,6 +1,44 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 import './Login.css'
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    
+    try {
+      const response = await axios.post('http://localhost:5001/api/users/login', formData)
+      
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.user))
+      
+      toast.success('Đăng nhập thành công!')
+      setTimeout(() => {
+        navigate('/')
+      }, 1500)
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Đăng nhập thất bại')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <main className="login-page">
       {/* Breadcrumb */}
@@ -44,7 +82,7 @@ const Login = () => {
                 <a href="/dang-ky" className="register-link">Quên mật khẩu?</a>
               </div>
 
-              <form className="login-form">
+              <form className="login-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="email">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -56,7 +94,9 @@ const Login = () => {
                   <input 
                     type="text" 
                     id="email" 
-                    name="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     required 
                   />
                 </div>
@@ -72,13 +112,17 @@ const Login = () => {
                   <input 
                     type="password" 
                     id="password" 
-                    name="password" 
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     required 
                   />
                 </div>
 
                 <div className="form-actions">
-                  <button type="submit" className="btn-login">Đăng nhập</button>
+                  <button type="submit" className="btn-login" disabled={loading}>
+                    {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+                  </button>
                   <a href="/dang-ky" className="create-account-link">Tạo tài khoản mới</a>
                 </div>
               </form>

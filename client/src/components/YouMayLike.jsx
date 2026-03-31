@@ -1,20 +1,29 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './YouMayLike.css'
 
 const YouMayLike = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
   const sliderRef = useRef(null)
 
-  const products = [
-    { id: 1, name: 'Đầm hoa nhí chữ A màu xanh sát nách', price: 540000, image: '/images/may-like-1.jpg' },
-    { id: 2, name: 'Chân váy xòe xếp ly màu xám', price: 490000, image: '/images/may-like-2.jpg' },
-    { id: 3, name: 'Đầm trắng chữ A cổ sơ mi phối nút', price: 700000, image: '/images/may-like-3.jpg' },
-    { id: 4, name: 'Đầm công sở hoa tiết dáng xòe cổ V phối nút', price: 590000, image: '/images/may-like-4.jpg' },
-    { id: 5, name: 'Đầm công sở chữ A nhẹ eo cổ sơ mi', price: 590000, image: '/images/may-like-5.jpg' },
-    { id: 6, name: 'Đầm ren kem dự tiệc dáng xòe', price: 600000, image: '/images/may-like-6.jpg' },
-    { id: 7, name: 'Chân váy tơ màu xanh dáng xòe dài', price: 380000, image: '/images/may-like-7.jpg' },
-    { id: 8, name: 'Đầm xanh công sở họa trừng viền chữ nổi', price: 590000, image: '/images/may-like-8.jpg' }
-  ]
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('http://localhost:5001/api/products')
+      const data = await response.json()
+      // Lấy 8 sản phẩm ngẫu nhiên
+      const shuffled = data.sort(() => 0.5 - Math.random())
+      setProducts(shuffled.slice(0, 8))
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
@@ -46,26 +55,31 @@ const YouMayLike = () => {
           </button>
 
           <div className="products-slider" ref={sliderRef}>
-            {products.map((product) => (
-              <div key={product.id} className="slider-product-card">
-                <div className="slider-product-image">
-                  <div className="slider-image-placeholder">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      onError={(e) => {
-                        e.target.style.display = 'none'
-                        e.target.parentElement.classList.add('no-image')
-                      }}
-                    />
-                  </div>
+            {loading ? (
+              <p style={{ padding: '40px', textAlign: 'center', width: '100%' }}>Đang tải...</p>
+            ) : (
+              products.map((product) => (
+                <div key={product.id} className="slider-product-card">
+                  <a href={`/product/${product.id}`} className="slider-product-link">
+                    <div className="slider-product-image">
+                      <div className="slider-image-placeholder">
+                        <img 
+                          src={product.images?.[0] || 'https://via.placeholder.com/250x350/f0f0f0/666?text=No+Image'} 
+                          alt={product.name}
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/250x350/f0f0f0/666?text=No+Image'
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="slider-product-info">
+                      <h3 className="slider-product-name">{product.name}</h3>
+                      <p className="slider-product-price">{formatPrice(product.price)}</p>
+                    </div>
+                  </a>
                 </div>
-                <div className="slider-product-info">
-                  <h3 className="slider-product-name">{product.name}</h3>
-                  <p className="slider-product-price">{formatPrice(product.price)}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
           <button className="slider-nav-btn right" onClick={() => scroll('right')}>

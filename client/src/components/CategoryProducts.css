@@ -53,6 +53,12 @@
   border: 1px solid #f0f0f0;
 }
 
+.category-product-card .category-product-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .category-product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);

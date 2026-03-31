@@ -1,32 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './CategoryProducts.css'
 
 const CategoryProducts = () => {
   const [activeCategory, setActiveCategory] = useState('di-lam')
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const categories = [
-    { id: 'di-lam', label: 'ĐỒ ĐI LÀM' },
-    { id: 'di-choi', label: 'ĐỒ ĐI CHƠI' },
-    { id: 'di-tiec', label: 'ĐỒ ĐI TIỆC' }
+    { id: 'di-lam', label: 'ĐỒ ĐI LÀM', dbCategory: 'Váy Đầm Công Sở' },
+    { id: 'di-choi', label: 'ĐỒ ĐI CHƠI', dbCategory: 'New Collection' },
+    { id: 'di-tiec', label: 'ĐỒ ĐI TIỆC', dbCategory: 'Áo Khoác' }
   ]
 
-  const products = {
-    'di-lam': [
-      { id: 1, name: 'Quần âm công sở ống suông ống lưng cao', price: 400000, image: '/images/cat-1.jpg' },
-      { id: 2, name: 'Áo sơ mi nữ kẻ sọc xanh trắng', price: 360000, image: '/images/cat-2.jpg' },
-      { id: 3, name: 'Chân váy midi công sở màu đen dáng xòe', price: 380000, image: '/images/cat-3.jpg' },
-      { id: 4, name: 'Đầm chữ A họa tiết hoa cổ thuyền lệch nhún vai', price: 480000, image: '/images/cat-4.jpg' },
-      { id: 5, name: 'Đầm đen xòe chữ A phối ren kèm cổ áo nơ', price: 620000, image: '/images/cat-5.jpg' },
-      { id: 6, name: 'Đầm xòe màu xanh đen cổ xếp ly', price: 650000, image: '/images/cat-6.jpg' }
-    ],
-    'di-choi': [
-      { id: 7, name: 'Áo thun basic trắng', price: 250000, image: '/images/cat-7.jpg' },
-      { id: 8, name: 'Quần jean ống rộng', price: 450000, image: '/images/cat-8.jpg' }
-    ],
-    'di-tiec': [
-      { id: 9, name: 'Đầm dạ hội sang trọng', price: 890000, image: '/images/cat-9.jpg' },
-      { id: 10, name: 'Váy xòe dự tiệc', price: 750000, image: '/images/cat-10.jpg' }
-    ]
+  useEffect(() => {
+    const category = categories.find(c => c.id === activeCategory)
+    if (category) {
+      fetchProducts(category.dbCategory)
+    }
+  }, [activeCategory])
+
+  const fetchProducts = async (dbCategory) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`http://localhost:5001/api/products?category=${dbCategory}`)
+      const data = await response.json()
+      setProducts(data.slice(0, 6)) // Lấy 6 sản phẩm đầu tiên
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const formatPrice = (price) => {
@@ -53,32 +56,41 @@ const CategoryProducts = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="category-products-grid">
-          {products[activeCategory].map((product) => (
-            <div key={product.id} className="category-product-card">
-              <div className="category-product-image">
-                <div className="category-image-placeholder">
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    onError={(e) => {
-                      e.target.style.display = 'none'
-                      e.target.parentElement.classList.add('no-image')
-                    }}
-                  />
-                </div>
+        {loading ? (
+          <p style={{ textAlign: 'center', padding: '40px' }}>Đang tải...</p>
+        ) : (
+          <div className="category-products-grid">
+            {products.map((product) => (
+              <div key={product.id} className="category-product-card">
+                <a href={`/product/${product.id}`} className="category-product-link">
+                  <div className="category-product-image">
+                    <div className="category-image-placeholder">
+                      <img 
+                        src={product.images?.[0] || 'https://via.placeholder.com/300x400/f0f0f0/666?text=No+Image'} 
+                        alt={product.name}
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/300x400/f0f0f0/666?text=No+Image'
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="category-product-info">
+                    <h3 className="category-product-name">{product.name}</h3>
+                    <p className="category-product-price">{formatPrice(product.price)}</p>
+                  </div>
+                </a>
               </div>
-              <div className="category-product-info">
-                <h3 className="category-product-name">{product.name}</h3>
-                <p className="category-product-price">{formatPrice(product.price)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* View All Button */}
         <div className="view-all-wrapper">
-          <button className="btn-view-all-category">XEM TẤT CẢ ĐỒ {categories.find(c => c.id === activeCategory)?.label}</button>
+          <a href={activeCategory === 'di-lam' ? '/vay-dam-cong-so' : activeCategory === 'di-choi' ? '/new-collection' : '/ao-khoac'}>
+            <button className="btn-view-all-category">
+              XEM TẤT CẢ {categories.find(c => c.id === activeCategory)?.label}
+            </button>
+          </a>
         </div>
       </div>
     </section>

@@ -1,20 +1,46 @@
+import { useState, useEffect } from 'react'
 import './Lookbook.css'
 
 const LookbookPage = () => {
-  const lookbookImages = [
-    { id: 1, image: '/images/lookbook-1.jpg', alt: 'D\'Chic Fashion Lookbook 1', height: 'tall' },
-    { id: 2, image: '/images/lookbook-2.jpg', alt: 'D\'Chic Fashion Lookbook 2', height: 'medium' },
-    { id: 3, image: '/images/lookbook-3.jpg', alt: 'D\'Chic Fashion Lookbook 3', height: 'tall' },
-    { id: 4, image: '/images/lookbook-4.jpg', alt: 'D\'Chic Fashion Lookbook 4', height: 'short' },
-    { id: 5, image: '/images/lookbook-5.jpg', alt: 'D\'Chic Fashion Lookbook 5', height: 'tall' },
-    { id: 6, image: '/images/lookbook-6.jpg', alt: 'D\'Chic Fashion Lookbook 6', height: 'medium' },
-    { id: 7, image: '/images/lookbook-7.jpg', alt: 'D\'Chic Fashion Lookbook 7', height: 'tall' },
-    { id: 8, image: '/images/lookbook-8.jpg', alt: 'D\'Chic Fashion Lookbook 8', height: 'medium' },
-    { id: 9, image: '/images/lookbook-9.jpg', alt: 'D\'Chic Fashion Lookbook 9', height: 'short' },
-    { id: 10, image: '/images/lookbook-10.jpg', alt: 'D\'Chic Fashion Lookbook 10', height: 'tall' },
-    { id: 11, image: '/images/lookbook-11.jpg', alt: 'D\'Chic Fashion Lookbook 11', height: 'medium' },
-    { id: 12, image: '/images/lookbook-12.jpg', alt: 'D\'Chic Fashion Lookbook 12', height: 'tall' }
-  ]
+  const [lookbookImages, setLookbookImages] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchLookbook = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/lookbook')
+        const data = await response.json()
+        
+        // Add height variation for masonry layout
+        const heightVariations = ['tall', 'medium', 'short']
+        const imagesWithHeight = data.map((item, index) => ({
+          ...item,
+          height: heightVariations[index % 3]
+        }))
+        
+        setLookbookImages(imagesWithHeight)
+      } catch (error) {
+        console.error('Error fetching lookbook:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchLookbook()
+  }, [])
+
+  if (loading) {
+    return (
+      <main className="lookbook-page">
+        <div className="lookbook-header">
+          <h1 className="lookbook-title">Lookbook</h1>
+        </div>
+        <div className="lookbook-content">
+          <p style={{ textAlign: 'center', padding: '2rem' }}>Đang tải...</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="lookbook-page">
@@ -31,13 +57,15 @@ const LookbookPage = () => {
               <div className="lookbook-image-wrapper">
                 <img 
                   src={item.image} 
-                  alt={item.alt}
+                  alt={item.title || 'D\'Chic Fashion Lookbook'}
                   onError={(e) => {
                     e.target.style.display = 'none'
                   }}
                 />
                 <div className="lookbook-overlay">
                   <div className="lookbook-overlay-content">
+                    {item.title && <h3>{item.title}</h3>}
+                    {item.description && <p>{item.description}</p>}
                     <span className="lookbook-view-icon">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>

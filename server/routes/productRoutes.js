@@ -1,4 +1,5 @@
 import express from 'express'
+import { Op } from 'sequelize'
 import Product from '../models/Product.js'
 
 const router = express.Router()
@@ -7,26 +8,25 @@ const router = express.Router()
 router.get('/', async (req, res) => {
   try {
     const { category, featured, search, sort } = req.query
-    let query = {}
+    let where = {}
 
-    if (category) query.category = category
-    if (featured) query.featured = true
+    if (category) where.category = category
+    if (featured) where.featured = true
     if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } }
+      where[Op.or] = [
+        { name: { [Op.like]: `%${search}%` } },
+        { description: { [Op.like]: `%${search}%` } }
       ]
     }
 
-    let products = Product.find(query)
+    let order = []
+    if (sort === 'price-asc') order = [['price', 'ASC']]
+    if (sort === 'price-desc') order = [['price', 'DESC']]
+    if (sort === 'newest') order = [['createdAt', 'DESC']]
 
-    if (sort === 'price-asc') products = products.sort({ price: 1 })
-    if (sort === 'price-desc') products = products.sort({ price: -1 })
-    if (sort === 'newest') products = products.sort({ createdAt: -1 })
+    const products = await Product.findAll({ where, order })
 
-    const result = await products
-
-    res.json(result)
+    res.json(products)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -35,7 +35,18 @@ router.get('/', async (req, res) => {
 // Get single product
 router.get('/:id', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
+    const { id } = req.params
+    let product
+    
+    // Check if id is a number or a code
+    if (isNaN(id)) {
+      // Search by code
+      product = await Product.findOne({ where: { code: id } })
+    } else {
+      // Search by ID
+      product = await Product.findByPk(id)
+    }
+    
     if (!product) {
       return res.status(404).json({ message: 'Product not found' })
     }
@@ -48,9 +59,8 @@ router.get('/:id', async (req, res) => {
 // Create product (Admin only - add auth middleware later)
 router.post('/', async (req, res) => {
   try {
-    const product = new Product(req.body)
-    const savedProduct = await product.save()
-    res.status(201).json(savedProduct)
+    const product = await Product.create(req.body)
+    res.status(201).json(product)
   } catch (error) {
     res.status(400).json({ message: error.message })
   }
@@ -59,14 +69,13 @@ router.post('/', async (req, res) => {
 // Update product
 router.put('/:id', async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    )
-    if (!product) {
+    const [updated] = await Product.update(req.body, {
+      where: { id: req.params.id }
+    })
+    if (!updated) {
       return res.status(404).json({ message: 'Product not found' })
     }
+    const product = await Product.findByPk(req.params.id)
     res.json(product)
   } catch (error) {
     res.status(400).json({ message: error.message })
@@ -76,8 +85,10 @@ router.put('/:id', async (req, res) => {
 // Delete product
 router.delete('/:id', async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id)
-    if (!product) {
+    const deleted = await Product.destroy({
+      where: { id: req.params.id }
+    })
+    if (!deleted) {
       return res.status(404).json({ message: 'Product not found' })
     }
     res.json({ message: 'Product deleted successfully' })
