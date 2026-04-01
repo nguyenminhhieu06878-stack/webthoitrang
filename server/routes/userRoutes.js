@@ -1,7 +1,7 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
-import { protect } from '../middleware/auth.js'
+import { protect, adminOnly } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -127,6 +127,165 @@ router.put('/profile', protect, async (req, res) => {
         role: user.role
       }
     })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// Admin routes
+
+// Create user (admin only) - Must come before GET '/' route
+router.post('/', protect, adminOnly, async (req, res) => {
+  try {
+    const { name, email, password, phone, role } = req.body
+
+    // Validation
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Please provide all required fields' })
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' })
+    }
+
+    const existingUser = await User.findOne({ where: { email } })
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' })
+    }
+
+    const user = await User.create({ 
+      name, 
+      email, 
+      password,
+      phone: phone || null,
+      role: role || 'user'
+    })
+
+    res.status(201).json({
+      message: 'User created successfully',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role
+      }
+    })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+})
+
+// Get all users (admin only)
+router.get('/', protect, adminOnly, async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'email', 'phone', 'role', 'createdAt'],
+      order: [['createdAt', 'DESC']]
+    })
+
+    res.json({ users })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// Update user (admin only)
+router.put('/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const { name, email, phone, password, role } = req.body
+    const userId = req.params.id
+
+    const user = await User.findByPk(userId)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Check if email is being changed and if it already exists
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ where: { email } })
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email already exists' })
+      }
+      user.email = email
+    }
+
+    if (name) user.name = name
+    if (phone !== undefined) user.phone = phone || null
+    if (role && ['user', 'admin'].includes(role)) user.role = role
+    
+    // Only update password if provided
+    if (password && password.trim().length > 0) {
+      if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters' })
+      }
+      user.password = password
+    }
+
+    await user.save()
+
+    res.json({
+      message: 'User updated successfully',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role
+      }
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// Update user role (admin only)
+router.patch('/:id/role', protect, adminOnly, async (req, res) => {
+  try {
+    const { role } = req.body
+    const userId = req.params.id
+
+    if (!['user', 'admin'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' })
+    }
+
+    const user = await User.findByPk(userId)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    user.role = role
+    await user.save()
+
+    res.json({ message: 'User role updated successfully' })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// Delete user (admin only)
+router.delete('/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const userId = req.params.id
+
+    // Prevent admin from deleting themselves
+    if (userId == req.user.id) {
+      return res.status(400).json({ message: 'Cannot delete your own account' })
+    }
+
+    const user = await User.findByPk(userId)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Prevent deleting other admins
+    if (user.role === 'admin') {
+      return res.status(400).json({ message: 'Cannot delete admin users' })
+    }
+
+    await user.destroy()
+
+    res.json({ message: 'User deleted successfully' })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

@@ -15,7 +15,7 @@ const Ao = () => {
       try {
         const response = await fetch('http://localhost:5001/api/products?category=Áo')
         const data = await response.json()
-        setProducts(data)
+        setProducts(data.products || data || [])
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {

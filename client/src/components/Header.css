@@ -347,6 +347,17 @@
   background: #ffebee;
 }
 
+.dropdown-item.admin-link {
+  background: linear-gradient(135deg, #000 0%, #333 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.dropdown-item.admin-link:hover {
+  background: linear-gradient(135deg, #333 0%, #555 100%);
+  color: white;
+}
+
 .dropdown-divider {
   height: 1px;
   background: #e0e0e0;

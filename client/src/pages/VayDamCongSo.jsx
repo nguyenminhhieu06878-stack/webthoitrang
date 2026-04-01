@@ -15,7 +15,7 @@ const VayDamCongSo = () => {
       try {
         const response = await fetch('http://localhost:5001/api/products?category=Váy Đầm Công Sở')
         const data = await response.json()
-        setProducts(data)
+        setProducts(data.products || data || [])
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {

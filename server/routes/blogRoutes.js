@@ -1,6 +1,7 @@
 import express from 'express'
 import Blog from '../models/Blog.js'
 import { Op } from 'sequelize'
+import { protect, adminOnly } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -80,8 +81,8 @@ router.get('/search/:query', async (req, res) => {
   }
 })
 
-// Create new blog (admin only - add auth middleware later)
-router.post('/', async (req, res) => {
+// Create new blog (admin only)
+router.post('/', protect, adminOnly, async (req, res) => {
   try {
     const blog = await Blog.create(req.body)
     res.status(201).json(blog)
@@ -91,8 +92,8 @@ router.post('/', async (req, res) => {
   }
 })
 
-// Update blog (admin only - add auth middleware later)
-router.put('/:id', async (req, res) => {
+// Update blog (admin only)
+router.put('/:id', protect, adminOnly, async (req, res) => {
   try {
     const blog = await Blog.findByPk(req.params.id)
     
@@ -108,8 +109,8 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// Delete blog (admin only - add auth middleware later)
-router.delete('/:id', async (req, res) => {
+// Delete blog (admin only)
+router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const blog = await Blog.findByPk(req.params.id)
     

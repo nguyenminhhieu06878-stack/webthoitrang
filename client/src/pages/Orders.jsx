@@ -8,11 +8,25 @@ const Orders = () => {
   const navigate = useNavigate()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all') // all, pending, processing, shipped, delivered, cancelled
+  const [filter, setFilter] = useState('all')
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [selectedOrder, setSelectedOrder] = useState(null)
+  const [showDetailModal, setShowDetailModal] = useState(false)
 
   useEffect(() => {
     fetchOrders()
   }, [])
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showDropdown && !event.target.closest('.filter-dropdown')) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showDropdown])
 
   const fetchOrders = async () => {
     try {
@@ -47,6 +61,7 @@ const Orders = () => {
 
   const getStatusText = (status) => {
     const statusMap = {
+      all: 'Tất cả trạng thái',
       pending: 'Chờ xác nhận',
       processing: 'Đang xử lý',
       shipped: 'Đang giao',
@@ -81,6 +96,52 @@ const Orders = () => {
     })
   }
 
+  const handleViewDetail = (order) => {
+    setSelectedOrder(order)
+    setShowDetailModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowDetailModal(false)
+    setSelectedOrder(null)
+  }
+
+  const handleReorder = (order) => {
+    try {
+      // Get current cart
+      const existingCart = JSON.parse(localStorage.getItem('cart') || '[]')
+      
+      // Add all items from the order to cart
+      order.items.forEach(item => {
+        existingCart.push({
+          id: item.productId || item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          size: item.size,
+          color: item.color,
+          quantity: item.quantity
+        })
+      })
+      
+      // Save to localStorage
+      localStorage.setItem('cart', JSON.stringify(existingCart))
+      
+      // Update cart count
+      window.dispatchEvent(new Event('cartUpdated'))
+      
+      toast.success(`Đã thêm ${order.items.length} sản phẩm vào giỏ hàng!`)
+      
+      // Navigate to cart
+      setTimeout(() => {
+        navigate('/cart')
+      }, 1000)
+    } catch (error) {
+      console.error('Error reordering:', error)
+      toast.error('Không thể thêm sản phẩm vào giỏ hàng')
+    }
+  }
+
   if (loading) {
     return (
       <main className="orders-page">
@@ -106,47 +167,108 @@ const Orders = () => {
           <div className="orders-header">
             <h1>Đơn hàng của tôi</h1>
             <p className="orders-count">
-              {filteredOrders.length} đơn hàng
+              {filteredOrders.length} đơn hàng {showDropdown && '(Dropdown đang mở)'}
             </p>
           </div>
 
           <div className="orders-filters">
-            <button
-              className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-              onClick={() => setFilter('all')}
-            >
-              Tất cả
-            </button>
-            <button
-              className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
-              onClick={() => setFilter('pending')}
-            >
-              Chờ xác nhận
-            </button>
-            <button
-              className={`filter-btn ${filter === 'processing' ? 'active' : ''}`}
-              onClick={() => setFilter('processing')}
-            >
-              Đang xử lý
-            </button>
-            <button
-              className={`filter-btn ${filter === 'shipped' ? 'active' : ''}`}
-              onClick={() => setFilter('shipped')}
-            >
-              Đang giao
-            </button>
-            <button
-              className={`filter-btn ${filter === 'delivered' ? 'active' : ''}`}
-              onClick={() => setFilter('delivered')}
-            >
-              Đã giao
-            </button>
-            <button
-              className={`filter-btn ${filter === 'cancelled' ? 'active' : ''}`}
-              onClick={() => setFilter('cancelled')}
-            >
-              Đã hủy
-            </button>
+            <div className="filter-dropdown">
+              <button 
+                className="dropdown-toggle"
+                onClick={() => {
+                  console.log('Toggle clicked, current state:', showDropdown)
+                  setShowDropdown(!showDropdown)
+                }}
+              >
+                <span>{getStatusText(filter)}</span>
+                <svg 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2"
+                  style={{ transform: showDropdown ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              
+              {showDropdown && (
+                <div 
+                  className="dropdown-menu" 
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    display: 'block',
+                    visibility: 'visible',
+                    opacity: 1,
+                    position: 'absolute',
+                    zIndex: 9999
+                  }}
+                >
+                  <button
+                    className={`dropdown-item ${filter === 'all' ? 'active' : ''}`}
+                    onClick={() => {
+                      console.log('Setting filter to: all')
+                      setFilter('all')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    Tất cả trạng thái
+                  </button>
+                  <button
+                    className={`dropdown-item ${filter === 'pending' ? 'active' : ''}`}
+                    onClick={() => {
+                      console.log('Setting filter to: pending')
+                      setFilter('pending')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    Chờ xác nhận
+                  </button>
+                  <button
+                    className={`dropdown-item ${filter === 'processing' ? 'active' : ''}`}
+                    onClick={() => {
+                      console.log('Setting filter to: processing')
+                      setFilter('processing')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    Đang xử lý
+                  </button>
+                  <button
+                    className={`dropdown-item ${filter === 'shipped' ? 'active' : ''}`}
+                    onClick={() => {
+                      console.log('Setting filter to: shipped')
+                      setFilter('shipped')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    Đang giao
+                  </button>
+                  <button
+                    className={`dropdown-item ${filter === 'delivered' ? 'active' : ''}`}
+                    onClick={() => {
+                      console.log('Setting filter to: delivered')
+                      setFilter('delivered')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    Đã giao
+                  </button>
+                  <button
+                    className={`dropdown-item ${filter === 'cancelled' ? 'active' : ''}`}
+                    onClick={() => {
+                      console.log('Setting filter to: cancelled')
+                      setFilter('cancelled')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    Đã hủy
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {filteredOrders.length === 0 ? (
@@ -232,12 +354,12 @@ const Orders = () => {
                   </div>
 
                   <div className="order-actions">
-                    <button className="btn-detail">Xem chi tiết</button>
+                    <button className="btn-detail" onClick={() => handleViewDetail(order)}>Xem chi tiết</button>
                     {order.status === 'pending' && (
                       <button className="btn-cancel">Hủy đơn</button>
                     )}
                     {order.status === 'delivered' && (
-                      <button className="btn-reorder">Mua lại</button>
+                      <button className="btn-reorder" onClick={() => handleReorder(order)}>Mua lại</button>
                     )}
                   </div>
                 </div>
@@ -246,6 +368,127 @@ const Orders = () => {
           )}
         </div>
       </div>
+
+      {/* Order Detail Modal */}
+      {showDetailModal && selectedOrder && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Chi tiết đơn hàng #{selectedOrder.id}</h2>
+              <button className="modal-close" onClick={handleCloseModal}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="detail-section">
+                <h3>Thông tin đơn hàng</h3>
+                <div className="detail-row">
+                  <span className="detail-label">Mã đơn hàng:</span>
+                  <span className="detail-value">#{selectedOrder.id}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Ngày đặt:</span>
+                  <span className="detail-value">{formatDate(selectedOrder.createdAt)}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Trạng thái:</span>
+                  <span className={getStatusClass(selectedOrder.status)}>
+                    {getStatusText(selectedOrder.status)}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Thanh toán:</span>
+                  <span className="detail-value">
+                    {selectedOrder.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : 'Chuyển khoản'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="detail-section">
+                <h3>Thông tin người nhận</h3>
+                <div className="detail-row">
+                  <span className="detail-label">Họ tên:</span>
+                  <span className="detail-value">{selectedOrder.shippingAddress?.fullName}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Số điện thoại:</span>
+                  <span className="detail-value">{selectedOrder.shippingAddress?.phone}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Email:</span>
+                  <span className="detail-value">{selectedOrder.shippingAddress?.email || 'Không có'}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Địa chỉ:</span>
+                  <span className="detail-value">
+                    {selectedOrder.shippingAddress?.street}, {selectedOrder.shippingAddress?.ward}, {selectedOrder.shippingAddress?.district}, {selectedOrder.shippingAddress?.city}
+                  </span>
+                </div>
+              </div>
+
+              <div className="detail-section">
+                <h3>Sản phẩm</h3>
+                <div className="detail-products">
+                  {selectedOrder.items && selectedOrder.items.map((item, index) => (
+                    <div key={index} className="detail-product-item">
+                      <div className="detail-product-image">
+                        {item.image ? (
+                          <img src={item.image} alt={item.name} />
+                        ) : (
+                          <div className="placeholder-image">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <div className="detail-product-info">
+                        <h4>{item.name}</h4>
+                        <p className="detail-product-meta">
+                          {item.size && <span>Size: {item.size}</span>}
+                          {item.color && <span>Màu: {item.color}</span>}
+                        </p>
+                        <p className="detail-product-quantity">Số lượng: {item.quantity}</p>
+                      </div>
+                      <div className="detail-product-price">
+                        {formatPrice(item.price * item.quantity)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="detail-section detail-total">
+                <div className="detail-row">
+                  <span className="detail-label">Tạm tính:</span>
+                  <span className="detail-value">{formatPrice(selectedOrder.totalAmount)}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Phí vận chuyển:</span>
+                  <span className="detail-value">Miễn phí</span>
+                </div>
+                <div className="detail-row detail-row-total">
+                  <span className="detail-label">Tổng cộng:</span>
+                  <span className="detail-value">{formatPrice(selectedOrder.totalAmount)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              {selectedOrder.status === 'pending' && (
+                <button className="btn-cancel-order">Hủy đơn hàng</button>
+              )}
+              <button className="btn-close-modal" onClick={handleCloseModal}>Đóng</button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

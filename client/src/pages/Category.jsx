@@ -1,30 +1,74 @@
 import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import React from 'react'
 import BestSellers from '../components/BestSellers'
 import Blog from '../components/Blog'
-import './NewCollection.css'
+import './Category.css'
 
-const NewCollection = () => {
+const Category = () => {
+  const { slug } = useParams()
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [products, setProducts] = useState([])
+  const [category, setCategory] = useState(null)
   const [loading, setLoading] = useState(true)
   const productsPerPage = 25
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/api/products?category=New Collection')
-        const data = await response.json()
-        setProducts(data.products || data || [])
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+    fetchCategoryAndProducts()
+  }, [slug])
 
-    fetchProducts()
-  }, [])
+  const fetchCategoryAndProducts = async () => {
+    try {
+      // Fetch category info
+      const categoryResponse = await fetch('http://localhost:5001/api/categories')
+      const categoryData = await categoryResponse.json()
+      let foundCategory = categoryData.categories?.find(c => c.slug === slug)
+      
+      // If not found by slug, try to match by common mappings
+      if (!foundCategory) {
+        const categoryMappings = {
+          'ao': 'Áo',
+          'ao-khoac': 'Áo Khoác',
+          'quan': 'Quần',
+          'chan-vay': 'Chân Váy',
+          'vay-dam-cong-so': 'Váy Đầm Công Sở'
+        }
+        
+        const categoryName = categoryMappings[slug]
+        if (categoryName) {
+          foundCategory = categoryData.categories?.find(c => c.name === categoryName)
+          // If still not found, create a temporary category object
+          if (!foundCategory) {
+            foundCategory = {
+              name: categoryName,
+              slug: slug,
+              description: ''
+            }
+          }
+        }
+      }
+      
+      if (!foundCategory) {
+        console.error('Category not found for slug:', slug)
+        navigate('/')
+        return
+      }
+      
+      setCategory(foundCategory)
+
+      // Fetch products by category name
+      const productsResponse = await fetch(`http://localhost:5001/api/products?category=${encodeURIComponent(foundCategory.name)}`)
+      const productsData = await productsResponse.json()
+      const productsList = productsData.products || productsData || []
+      console.log(`Found ${productsList.length} products in category ${foundCategory.name}`)
+      setProducts(productsList)
+    } catch (error) {
+      console.error('Error fetching category and products:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
@@ -52,24 +96,31 @@ const NewCollection = () => {
     return [...new Set(pageNumbers)].sort((a, b) => a - b)
   }
 
+  if (loading) {
+    return <div className="loading">Đang tải...</div>
+  }
+
+  if (!category) {
+    return <div className="loading">Không tìm thấy danh mục</div>
+  }
+
   return (
     <main className="new-collection-content">
       <div className="breadcrumb">
         <div className="container">
           <a href="/">Trang chủ</a>
           <span className="separator">/</span>
-          <span className="current">New Collection</span>
+          <span className="current">{category.name}</span>
         </div>
       </div>
 
       <div className="collection-main">
         <div className="container">
-          <h1 className="collection-title">NEW COLLECTION</h1>
+          <h1 className="collection-title">{category.name.toUpperCase()}</h1>
+          {category.description && <p className="collection-description">{category.description}</p>}
 
-          {loading ? (
-            <p style={{ textAlign: 'center', padding: '2rem' }}>Đang tải...</p>
-          ) : products.length === 0 ? (
-            <p style={{ textAlign: 'center', padding: '2rem' }}>Không có sản phẩm</p>
+          {products.length === 0 ? (
+            <p style={{ textAlign: 'center', padding: '2rem' }}>Chưa có sản phẩm nào trong danh mục này</p>
           ) : (
             <>
               <div className="products-container">
@@ -191,4 +242,4 @@ const NewCollection = () => {
   )
 }
 
-export default NewCollection
+export default Category

@@ -9,6 +9,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [searching, setSearching] = useState(false)
+  const [categories, setCategories] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -17,6 +18,18 @@ const Header = () => {
     if (userData) {
       setUser(JSON.parse(userData))
     }
+
+    // Fetch categories
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/categories')
+        const data = await response.json()
+        setCategories(data.categories || [])
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+    fetchCategories()
 
     // Update cart count
     const updateCartCount = () => {
@@ -63,7 +76,8 @@ const Header = () => {
     try {
       const response = await fetch(`http://localhost:5001/api/products?search=${query}`)
       const data = await response.json()
-      setSearchResults(data.slice(0, 6)) // Hiển thị tối đa 6 kết quả
+      const productsData = data.products || data || []
+      setSearchResults(productsData.slice(0, 6)) // Hiển thị tối đa 6 kết quả
     } catch (error) {
       console.error('Error searching products:', error)
     } finally {
@@ -99,6 +113,20 @@ const Header = () => {
                 </svg>
               </button>
               <div className="dropdown-content">
+                {user.role === 'admin' && (
+                  <>
+                    <a href="/admin" className="dropdown-item admin-link">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="9" x2="15" y2="9"></line>
+                        <line x1="9" y1="13" x2="15" y2="13"></line>
+                        <line x1="9" y1="17" x2="13" y2="17"></line>
+                      </svg>
+                      Bảng điều khiển Admin
+                    </a>
+                    <div className="dropdown-divider"></div>
+                  </>
+                )}
                 <a href="/profile" className="dropdown-item">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -161,11 +189,11 @@ const Header = () => {
               <a href="#" className="nav-link">SHOP ONLINE</a>
               <div className="dropdown-menu">
                 <a href="/new-collection" className="dropdown-item featured">New Collection</a>
-                <a href="/ao" className="dropdown-item">Áo</a>
-                <a href="/vay-dam-cong-so" className="dropdown-item">Váy Đầm Công Sở</a>
-                <a href="/ao-khoac" className="dropdown-item">Áo Khoác</a>
-                <a href="/quan" className="dropdown-item">Quần</a>
-                <a href="/chan-vay" className="dropdown-item">Chân Váy</a>
+                {categories.map((category) => (
+                  <a key={category.id} href={`/category/${category.slug}`} className="dropdown-item">
+                    {category.name}
+                  </a>
+                ))}
               </div>
             </div>
             <a href="/blog" className="nav-link">BLOG</a>

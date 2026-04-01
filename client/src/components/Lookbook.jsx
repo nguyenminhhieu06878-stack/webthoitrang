@@ -10,8 +10,9 @@ const Lookbook = () => {
       try {
         const response = await fetch('http://localhost:5001/api/lookbook?featured=true')
         const data = await response.json()
-        // Get only first 3 featured lookbooks for homepage
-        setLookbooks(data.slice(0, 3))
+        // Get only first 4 featured lookbooks for homepage
+        const lookbooksData = data.lookbooks || data || []
+        setLookbooks(lookbooksData.slice(0, 4))
       } catch (error) {
         console.error('Error fetching lookbooks:', error)
       } finally {

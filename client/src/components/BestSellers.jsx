@@ -15,7 +15,8 @@ const BestSellers = () => {
       const response = await fetch('http://localhost:5001/api/products?featured=true')
       const data = await response.json()
       // Lấy 6 sản phẩm featured
-      setBestSellers(data.slice(0, 6))
+      const productsData = data.products || data || []
+      setBestSellers(productsData.slice(0, 6))
       setLoading(false)
     } catch (error) {
       console.error('Error fetching best sellers:', error)

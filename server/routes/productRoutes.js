@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
 
     const products = await Product.findAll({ where, order })
 
-    res.json(products)
+    res.json({ products })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

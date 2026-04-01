@@ -13,7 +13,8 @@ const LookbookPage = () => {
         
         // Add height variation for masonry layout
         const heightVariations = ['tall', 'medium', 'short']
-        const imagesWithHeight = data.map((item, index) => ({
+        const lookbookData = data.lookbooks || data || []
+        const imagesWithHeight = lookbookData.map((item, index) => ({
           ...item,
           height: heightVariations[index % 3]
         }))

@@ -14,7 +14,8 @@ const FeaturedProducts = () => {
       const response = await fetch('http://localhost:5001/api/products?featured=true')
       const data = await response.json()
       // Lấy 4 sản phẩm đầu tiên
-      setProducts(data.slice(0, 4))
+      const productsData = data.products || data || []
+      setProducts(productsData.slice(0, 4))
       setLoading(false)
     } catch (error) {
       console.error('Error fetching featured products:', error)

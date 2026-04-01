@@ -1,5 +1,6 @@
 import express from 'express'
 import Lookbook from '../models/Lookbook.js'
+import { protect, adminOnly } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -18,7 +19,7 @@ router.get('/', async (req, res) => {
       order: [['order', 'ASC'], ['createdAt', 'DESC']]
     })
 
-    res.json(lookbooks)
+    res.json({ lookbooks })
   } catch (error) {
     console.error('Error fetching lookbooks:', error)
     res.status(500).json({ message: 'Error fetching lookbooks', error: error.message })
@@ -41,8 +42,8 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// Create new lookbook (admin only - add auth middleware later)
-router.post('/', async (req, res) => {
+// Create new lookbook (admin only)
+router.post('/', protect, adminOnly, async (req, res) => {
   try {
     const lookbook = await Lookbook.create(req.body)
     res.status(201).json(lookbook)
@@ -52,8 +53,8 @@ router.post('/', async (req, res) => {
   }
 })
 
-// Update lookbook (admin only - add auth middleware later)
-router.put('/:id', async (req, res) => {
+// Update lookbook (admin only)
+router.put('/:id', protect, adminOnly, async (req, res) => {
   try {
     const lookbook = await Lookbook.findByPk(req.params.id)
     
@@ -69,8 +70,8 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// Delete lookbook (admin only - add auth middleware later)
-router.delete('/:id', async (req, res) => {
+// Delete lookbook (admin only)
+router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const lookbook = await Lookbook.findByPk(req.params.id)
     

@@ -31,14 +31,16 @@ const ProductDetail = () => {
         // Fetch hot products (featured products)
         const hotResponse = await fetch('http://localhost:5001/api/products?featured=true')
         const hotData = await hotResponse.json()
-        setHotProducts(hotData.slice(0, 6))
+        const hotProductsData = hotData.products || hotData || []
+        setHotProducts(hotProductsData.slice(0, 6))
 
         // Fetch related products (same category)
         if (data.category) {
           const relatedResponse = await fetch(`http://localhost:5001/api/products?category=${data.category}`)
           const relatedData = await relatedResponse.json()
+          const relatedProductsData = relatedData.products || relatedData || []
           // Filter out current product and take 4 products
-          setRelatedProducts(relatedData.filter(p => p.id !== data.id).slice(0, 4))
+          setRelatedProducts(relatedProductsData.filter(p => p.id !== data.id).slice(0, 4))
         }
       } catch (error) {
         console.error('Error fetching product:', error)

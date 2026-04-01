@@ -14,6 +14,7 @@ import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import lookbookRoutes from './routes/lookbookRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js'
 
 dotenv.config()
 
@@ -23,7 +24,7 @@ const app = express()
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
@@ -39,6 +40,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/lookbook', lookbookRoutes)
 app.use('/api/blogs', blogRoutes)
+app.use('/api/categories', categoryRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -30,9 +30,17 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(response.data.user))
       
       toast.success('Đăng nhập thành công!')
-      setTimeout(() => {
-        navigate('/')
-      }, 1500)
+      
+      // Check if user is admin and redirect accordingly
+      if (response.data.user.role === 'admin') {
+        setTimeout(() => {
+          navigate('/admin')
+        }, 1500)
+      } else {
+        setTimeout(() => {
+          navigate('/')
+        }, 1500)
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Đăng nhập thất bại')
     } finally {

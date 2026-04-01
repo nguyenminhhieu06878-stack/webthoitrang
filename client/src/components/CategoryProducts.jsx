@@ -24,7 +24,8 @@ const CategoryProducts = () => {
     try {
       const response = await fetch(`http://localhost:5001/api/products?category=${dbCategory}`)
       const data = await response.json()
-      setProducts(data.slice(0, 6)) // Lấy 6 sản phẩm đầu tiên
+      const productsData = data.products || data || []
+      setProducts(productsData.slice(0, 6)) // Lấy 6 sản phẩm đầu tiên
     } catch (error) {
       console.error('Error fetching products:', error)
     } finally {
@@ -86,7 +87,7 @@ const CategoryProducts = () => {
 
         {/* View All Button */}
         <div className="view-all-wrapper">
-          <a href={activeCategory === 'di-lam' ? '/vay-dam-cong-so' : activeCategory === 'di-choi' ? '/new-collection' : '/ao-khoac'}>
+          <a href={activeCategory === 'di-lam' ? '/category/vay-dam-cong-so' : activeCategory === 'di-choi' ? '/new-collection' : '/category/ao-khoac'}>
             <button className="btn-view-all-category">
               XEM TẤT CẢ {categories.find(c => c.id === activeCategory)?.label}
             </button>

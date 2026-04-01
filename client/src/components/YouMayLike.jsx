@@ -16,7 +16,8 @@ const YouMayLike = () => {
       const response = await fetch('http://localhost:5001/api/products')
       const data = await response.json()
       // Lấy 8 sản phẩm ngẫu nhiên
-      const shuffled = data.sort(() => 0.5 - Math.random())
+      const productsData = data.products || data || []
+      const shuffled = productsData.sort(() => 0.5 - Math.random())
       setProducts(shuffled.slice(0, 8))
     } catch (error) {
       console.error('Error fetching products:', error)
