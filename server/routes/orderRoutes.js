@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
       }
     }
 
-    const { items, totalAmount, shippingAddress, paymentMethod } = req.body
+    const { items, totalAmount, shippingAddress, paymentMethod, paymentStatus, transactionId } = req.body
 
     console.log('Creating order with userId:', userId)
 
@@ -52,7 +52,8 @@ router.post('/', async (req, res) => {
       shippingAddress,
       paymentMethod,
       status: 'pending',
-      paymentStatus: 'pending'
+      paymentStatus: paymentStatus || 'pending',
+      transactionId: transactionId || null
     })
 
     res.status(201).json({ order, message: 'Đặt hàng thành công' })

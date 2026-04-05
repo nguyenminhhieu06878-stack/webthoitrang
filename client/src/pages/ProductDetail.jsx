@@ -13,6 +13,7 @@ const ProductDetail = () => {
   const [activeAccordion, setActiveAccordion] = useState('')
   const [hotProducts, setHotProducts] = useState([])
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [showSizeGuide, setShowSizeGuide] = useState(false)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -176,18 +177,13 @@ const ProductDetail = () => {
                   <input type="number" value={quantity} readOnly />
                   <button onClick={() => setQuantity(quantity + 1)}>+</button>
                 </div>
-                <a href="#" className="size-guide-link">Bảng size</a>
+                <a href="#" className="size-guide-link" onClick={(e) => { e.preventDefault(); setShowSizeGuide(true); }}>Bảng size</a>
               </div>
 
               {/* Add to Cart Button */}
               <button className="add-to-cart-btn" onClick={handleAddToCart}>
                 Thêm vào giỏ hàng
               </button>
-              
-              {/* Points Info */}
-              <p className="points-info">
-                Tích lũy <strong>{Math.floor(product.price / 20000)} điểm</strong> khi mua sản phẩm này! Tương đương <strong>{formatPrice(Math.floor(product.price / 20000) * 1000)}</strong>
-              </p>
 
               {/* Accordion Sections */}
               <div className="info-accordion">
@@ -341,6 +337,72 @@ const ProductDetail = () => {
 
         </div>
       </div>
+
+      {/* Size Guide Popup */}
+      {showSizeGuide && (
+        <div className="size-guide-overlay" onClick={() => setShowSizeGuide(false)}>
+          <div className="size-guide-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="close-popup" onClick={() => setShowSizeGuide(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <h3>Bảng Size</h3>
+            <div className="size-guide-content">
+              <table className="size-table">
+                <thead>
+                  <tr>
+                    <th>Size</th>
+                    <th>Vai (cm)</th>
+                    <th>Ngực (cm)</th>
+                    <th>Eo (cm)</th>
+                    <th>Dài áo (cm)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>S</td>
+                    <td>36-37</td>
+                    <td>82-86</td>
+                    <td>64-68</td>
+                    <td>58-60</td>
+                  </tr>
+                  <tr>
+                    <td>M</td>
+                    <td>38-39</td>
+                    <td>86-90</td>
+                    <td>68-72</td>
+                    <td>60-62</td>
+                  </tr>
+                  <tr>
+                    <td>L</td>
+                    <td>40-41</td>
+                    <td>90-94</td>
+                    <td>72-76</td>
+                    <td>62-64</td>
+                  </tr>
+                  <tr>
+                    <td>XL</td>
+                    <td>42-43</td>
+                    <td>94-98</td>
+                    <td>76-80</td>
+                    <td>64-66</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="size-note">
+                <p><strong>Lưu ý:</strong></p>
+                <ul>
+                  <li>Số đo có thể chênh lệch 1-2cm tùy theo cách đo</li>
+                  <li>Nếu bạn đang phân vân giữa 2 size, hãy chọn size lớn hơn</li>
+                  <li>Liên hệ hotline để được tư vấn size phù hợp</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

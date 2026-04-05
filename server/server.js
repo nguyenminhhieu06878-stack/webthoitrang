@@ -1,6 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+
+// Load environment variables first
+dotenv.config()
+
 import { connectDB } from './config/database.js'
 
 // Import models to sync with database
@@ -15,8 +19,8 @@ import orderRoutes from './routes/orderRoutes.js'
 import lookbookRoutes from './routes/lookbookRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
-
-dotenv.config()
+import paymentRoutes from './routes/paymentRoutes.js'
+import chatbotRoutes from './routes/chatbotRoutes.js'
 
 const app = express()
 
@@ -41,6 +45,8 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/lookbook', lookbookRoutes)
 app.use('/api/blogs', blogRoutes)
 app.use('/api/categories', categoryRoutes)
+app.use('/api/payment', paymentRoutes)
+app.use('/api/chatbot', chatbotRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

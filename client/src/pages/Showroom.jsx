@@ -5,48 +5,18 @@ const Showroom = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const showroomImages = [
-    '/images/showroom-1.jpg',
-    '/images/showroom-2.jpg',
-    '/images/showroom-3.jpg',
-    '/images/showroom-4.jpg',
-    '/images/showroom-5.jpg'
+    '/room1.png',
+    '/room2.png',
+    '/room3.png',
+    '/room4.png',
+    '/room5.png'
   ]
 
   const showrooms = [
     {
       id: 1,
-      address: '268 Tô Hiến Thành, P.15, Q.10, TP. Hồ Chí Minh',
-      phone: '028 38 62 57 91'
-    },
-    {
-      id: 2,
-      address: '40 Lê Văn Sỹ, P.1.1, Q.Phú Nhuận, TP. Hồ Chí Minh',
-      phone: '028 62 53 73 93'
-    },
-    {
-      id: 3,
-      address: '248B Phan Đình Phùng, P.1, Q.Phú Nhuận, TP. Hồ Chí Minh',
-      phone: '028 62 53 87 87'
-    },
-    {
-      id: 4,
-      address: '259 Nguyễn Trãi, P.Nguyễn Cư Trinh, Q.1 TP. Hồ Chí Minh',
-      phone: '028 62 913 241'
-    },
-    {
-      id: 5,
-      address: '664 Quang Trung, P.11, Q. Gò Vấp, TP. Hồ Chí Minh',
-      phone: '028 62 99 22 33'
-    },
-    {
-      id: 6,
-      address: '132A Cách Mạng Tháng 8, P.10, Q.3, TP. Hồ Chí Minh',
-      phone: '028 62 66 77 33'
-    },
-    {
-      id: 7,
-      address: '119 Lê Văn Duyệt (đường Đinh Tiên Hoàng cũ), P.3, Q.Bình Thạnh, TP. Hồ Chí Minh',
-      phone: '028 35 14 97 81'
+      address: '41 Tràng Tiền, Hoàn Kiếm, Hà Nội',
+      phone: '024 3562 2626'
     }
   ]
 
@@ -127,7 +97,7 @@ const Showroom = () => {
 
             {/* Right: Showroom List */}
             <div className="showroom-list-section">
-              <h2 className="showroom-list-title">TP. HỒ CHÍ MINH</h2>
+              <h2 className="showroom-list-title">HÀ NỘI</h2>
               <div className="showroom-list">
                 {showrooms.map((showroom) => (
                   <div key={showroom.id} className="showroom-item">

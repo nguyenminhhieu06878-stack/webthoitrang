@@ -338,14 +338,34 @@ const Orders = () => {
                   </div>
 
                   <div className="order-footer">
-                    <div className="order-address">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                      <span>
-                        {order.shippingAddress?.street}, {order.shippingAddress?.ward}, {order.shippingAddress?.district}, {order.shippingAddress?.city}
-                      </span>
+                    <div className="order-shipping-info">
+                      <div className="order-address">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                          <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>
+                          {order.shippingAddress?.address && `${order.shippingAddress.address}, `}
+                          {order.shippingAddress?.ward}, {order.shippingAddress?.district}, {order.shippingAddress?.city}
+                        </span>
+                      </div>
+                      <div className="order-payment-info">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                          <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                        <span>
+                          {order.paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng' : 
+                           order.paymentMethod === 'PAYOS' ? 'Thanh toán online' : 
+                           order.paymentMethod}
+                        </span>
+                        {order.paymentStatus === 'paid' && (
+                          <span className="payment-status-badge paid">Đã thanh toán</span>
+                        )}
+                        {order.paymentStatus === 'pending' && (
+                          <span className="payment-status-badge pending">Chưa thanh toán</span>
+                        )}
+                      </div>
                     </div>
                     <div className="order-total">
                       <span>Tổng cộng:</span>

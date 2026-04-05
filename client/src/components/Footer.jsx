@@ -8,11 +8,11 @@ const Footer = () => {
           {/* Column 1 - Contact */}
           <div className="footer-column">
             <h3 className="footer-heading">
-              HOTLINE <span className="footer-phone">028.36222 999</span>
+              HOTLINE <span className="footer-phone">024 3562 2626</span>
             </h3>
             <div className="footer-content">
-              <p className="footer-company">Công ty TNHH Thời Trang D'Chic Khôi</p>
-              <p>Địa chỉ: 256/134 Phạm Văn Hai, Phường Tân Bình, Quận Tân Bình, TP.HCM</p>
+              <p className="footer-company">Công ty TNHH Thời Trang D'Chic</p>
+              <p>Địa chỉ: 41 Tràng Tiền, Hà Nội</p>
             </div>
           </div>
 
@@ -23,7 +23,7 @@ const Footer = () => {
               <li><a href="/ve-chung-toi">Về chúng tôi</a></li>
               <li><a href="/lien-he">Liên hệ</a></li>
               <li><a href="/he-thong-showroom">Hệ thống 13 Showrooms</a></li>
-              <li><a href="#">Thời trang nữ thời trang công sở tại K&K Fashion 2026</a></li>
+              <li><a href="#">Thời trang nữ thời trang công sở tại D'Chic Fashion 2026</a></li>
             </ul>
           </div>
 

@@ -6,14 +6,14 @@ const Contact = () => {
       {/* Google Maps */}
       <div className="contact-map">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d251637.95196238213!2d106.36556434374996!3d10.755292800000012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752ee4ecba0e8d%3A0x8e5e39cfd0bb0000!2zVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5o!5e0!3m2!1svi!2s!4v1234567890123!5m2!1svi!2s"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.0969739862!2d105.85195731476295!3d21.02880938599474!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab953357c995%3A0x2f85e5f8e79a2e6!2zNDEgVHLDoG5nIFRpw6puLCBIw6AgTuG7mWk!5e0!3m2!1svi!2s!4v1234567890123!5m2!1svi!2s"
           width="100%"
           height="400"
           style={{ border: 0 }}
           allowFullScreen=""
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="D'Chic Fashion Location"
+          title="D'Chic Fashion - 41 Tràng Tiền, Hà Nội"
         ></iframe>
       </div>
 
@@ -27,18 +27,23 @@ const Contact = () => {
               
               <div className="contact-details">
                 <div className="contact-item">
+                  <span className="contact-label">Địa chỉ:</span>
+                  <span className="contact-value">41 Tràng Tiền, Hà Nội</span>
+                </div>
+                
+                <div className="contact-item">
                   <span className="contact-label">Điện thoại:</span>
-                  <a href="tel:02836222999" className="contact-value">(028) 36 222 999</a>
+                  <a href="tel:02435622626" className="contact-value">024 3562 2626</a>
                 </div>
                 
                 <div className="contact-item">
                   <span className="contact-label">Hotline:</span>
-                  <a href="tel:02836222999" className="contact-value">(028) 36 222 999</a>
+                  <a href="tel:02435622626" className="contact-value">024 3562 2626</a>
                 </div>
                 
                 <div className="contact-item">
                   <span className="contact-label">Email:</span>
-                  <a href="mailto:sales@dchicfashion.vn" className="contact-value">sales@dchicfashion.vn</a>
+                  <a href="mailto:contact@dchicfashion.vn" className="contact-value">contact@dchicfashion.vn</a>
                 </div>
                 
                 <div className="contact-item">

@@ -26,6 +26,8 @@ import Profile from './pages/Profile'
 import Orders from './pages/Orders'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentCancel from './pages/PaymentCancel'
 import ProductDetail from './pages/ProductDetail'
 import AdminLayout from './pages/Admin/AdminLayout'
 import Dashboard from './pages/Admin/Dashboard'
@@ -36,6 +38,7 @@ import AdminBlogs from './pages/Admin/AdminBlogs'
 import AdminLookbook from './pages/Admin/AdminLookbook'
 import AdminSettings from './pages/Admin/AdminSettings'
 import AdminCategories from './pages/Admin/AdminCategories'
+import Chatbot from './components/Chatbot'
 import './App.css'
 
 function App() {
@@ -66,6 +69,8 @@ function App() {
             <Route path="gio-hang" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="thanh-toan" element={<Checkout />} />
+            <Route path="payment-success" element={<PaymentSuccess />} />
+            <Route path="payment-cancel" element={<PaymentCancel />} />
             <Route path="product/:id" element={<ProductDetail />} />
             <Route path="dang-nhap" element={<Login />} />
             <Route path="dang-ky" element={<Register />} />
@@ -96,6 +101,9 @@ function App() {
           pauseOnHover
           theme="light"
         />
+
+        {/* Chatbot Widget */}
+        <Chatbot />
       </div>
     </Router>
   )

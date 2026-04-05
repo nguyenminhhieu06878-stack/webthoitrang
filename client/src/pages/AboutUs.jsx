@@ -38,16 +38,19 @@ const AboutUs = () => {
                 <p className="about-subtitle">Giới thiệu | Thời trang D'Chic Fashion — Về chúng tôi</p>
               </div>
 
-              {/* Store Image */}
-              <div className="store-image">
-                <img 
-                  src="/images/about-store.jpg" 
-                  alt="D'Chic Fashion Store"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                    e.target.parentElement.classList.add('no-image')
-                  }}
-                />
+              {/* YouTube Video */}
+              <div className="about-video">
+                <div className="video-wrapper">
+                  <iframe
+                    width="100%"
+                    height="500"
+                    src="https://www.youtube.com/embed/aiZJ5IxA6Bo?start=2"
+                    title="D'Chic Fashion Story"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
 
               {/* About Text */}

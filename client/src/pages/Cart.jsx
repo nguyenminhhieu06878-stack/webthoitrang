@@ -128,10 +128,6 @@ const Cart = () => {
             </div>
 
             <div className="cart-footer">
-              <div className="footer-note">
-                Bạn sẽ có được <strong>44 điểm</strong> với đơn hàng này. Ưu đãi thể không áp dụng với các chương trình khuyến mãi khác!
-              </div>
-              
               <div className="cart-bottom">
                 <div className="promo-section">
                   <input 

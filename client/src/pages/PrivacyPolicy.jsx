@@ -19,9 +19,9 @@ const PrivacyPolicy = () => {
             <h1 className="privacy-title">Chính sách bảo mật</h1>
 
             <div className="company-info">
-              <p className="company-name">CÔNG TY TNHH THỜI TRANG D'CHIC KHÔI</p>
+              <p className="company-name">CÔNG TY TNHH THỜI TRANG D'CHIC</p>
               <p>MST: 0319140957</p>
-              <p>ĐỊA CHỈ: 256/13A PHẠM VĂN HAI, PHƯỜNG TÂN SƠN NHẤT, TPHCM</p>
+              <p>ĐỊA CHỈ: 41 TRÀNG TIỀN, HÀ NỘI</p>
             </div>
 
             <section className="policy-section">
@@ -33,14 +33,14 @@ const PrivacyPolicy = () => {
                 Chúng tôi có thể thay đổi chính sách này theo thời gian. Các thay đổi sẽ được cập nhật trên trang web này. Chúng tôi khuyến khích bạn thường xuyên kiểm tra trang web này để cập nhật về chính sách bảo mật của chúng tôi.
               </p>
               <p>
-                Mọi ý kiến đóng góp xin gửi về địa chỉ email <a href="mailto:hotro@dchicfashion.vn">hotro@dchicfashion.vn</a> hoặc gọi điện thoại đến số hotline <strong>028.36222999</strong>. Chúng tôi luôn hoan nghênh những ý kiến đóng góp để có thể phục vụ khách hàng tốt hơn.
+                Mọi ý kiến đóng góp xin gửi về địa chỉ email <a href="mailto:hotro@dchicfashion.vn">hotro@dchicfashion.vn</a> hoặc gọi điện thoại đến số hotline <strong>024 3562 2626</strong>. Chúng tôi luôn hoan nghênh những ý kiến đóng góp để có thể phục vụ khách hàng tốt hơn.
               </p>
             </section>
 
             <section className="policy-section">
               <h2 className="section-title">Mục đích và phạm vi thu thập thông tin</h2>
               <p>
-                Chúng tôi sử dụng thông tin các bạn cung cấp để liên lạc xác nhận khi bạn đăng ký sử dụng dịch vụ trên website của Công ty TNHH Thời Trang D'Chic Khôi, đảm nhận, quản lý dịch vụ dchicfashion.vn.
+                Chúng tôi sử dụng thông tin các bạn cung cấp để liên lạc xác nhận khi bạn đăng ký sử dụng dịch vụ trên website của Công ty TNHH Thời Trang D'Chic, đảm nhận, quản lý dịch vụ dchicfashion.vn.
               </p>
               <p>
                 Chúng tôi sẽ không bán, chia sẻ hay tiết lộ ra ngoài thông tin cá nhân của bạn vì mục đích thương mại hoặc cho bất kỳ mục đích nào khác.
@@ -78,10 +78,10 @@ const PrivacyPolicy = () => {
             <section className="policy-section">
               <h2 className="section-title">Địa chỉ của đơn vị thu thập và quản lý thông tin cá nhân</h2>
               <p>
-                <strong>CÔNG TY TNHH THỜI TRANG D'CHIC KHÔI</strong><br />
-                Địa chỉ: 256/13A Phạm Văn Hai, Phường Tân Sơn Nhất, Quận Tân Bình, TP.HCM<br />
-                Điện thoại: 028.36222999<br />
-                Email: sales@dchicfashion.vn
+                <strong>CÔNG TY TNHH THỜI TRANG D'CHIC</strong><br />
+                Địa chỉ: 41 Tràng Tiền, Hà Nội<br />
+                Điện thoại: 024 3562 2626<br />
+                Email: contact@dchicfashion.vn
               </p>
             </section>
 
