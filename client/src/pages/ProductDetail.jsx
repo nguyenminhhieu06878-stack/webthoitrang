@@ -203,7 +203,7 @@ const ProductDetail = () => {
                   </button>
                   {activeAccordion === 'description' && (
                     <div className="accordion-content">
-                      <p>Đầm xòe công sở cổ lệch xếp ly với thiết kế thanh lịch, sang trọng. Phù hợp cho môi trường công sở và các sự kiện quan trọng. Chất liệu vải cao cấp, thoáng mát, dễ chịu khi mặc cả ngày dài.</p>
+                      <p>{product.description || 'Đầm xòe công sở cổ lệch xếp ly với thiết kế thanh lịch, sang trọng. Phù hợp cho môi trường công sở và các sự kiện quan trọng. Chất liệu vải cao cấp, thoáng mát, dễ chịu khi mặc cả ngày dài.'}</p>
                     </div>
                   )}
                 </div>

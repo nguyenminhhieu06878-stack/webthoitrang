@@ -70,9 +70,12 @@ const Products = () => {
         ...formData,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
-        sizes: formData.sizes.split(',').map(s => s.trim()),
-        images: formData.images.split(',').map(s => s.trim()).filter(s => s)
+        sizes: formData.sizes ? formData.sizes.split(',').map(s => s.trim()).filter(s => s) : [],
+        images: formData.images ? formData.images.split(',').map(s => s.trim()).filter(s => s) : [],
+        description: formData.description || ''
       }
+
+      console.log('Sending product data:', productData) // Debug log
 
       const response = await fetch(url, {
         method,
@@ -83,6 +86,9 @@ const Products = () => {
         body: JSON.stringify(productData)
       })
 
+      const responseData = await response.json()
+      console.log('Response:', responseData) // Debug log
+
       if (response.ok) {
         toast.success(editingProduct ? 'Cập nhật sản phẩm thành công!' : 'Thêm sản phẩm thành công!')
         setShowModal(false)
@@ -90,11 +96,12 @@ const Products = () => {
         resetForm()
         fetchProducts()
       } else {
-        toast.error('Có lỗi xảy ra')
+        console.error('Server error:', responseData)
+        toast.error(responseData.message || 'Có lỗi xảy ra')
       }
     } catch (error) {
       console.error('Error saving product:', error)
-      toast.error('Có lỗi xảy ra')
+      toast.error('Có lỗi xảy ra: ' + error.message)
     }
   }
 
@@ -405,11 +412,12 @@ const Products = () => {
               </div>
 
               <div className="form-group">
-                <label>Mô tả</label>
+                <label>Mô tả sản phẩm</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  rows="3"
+                  rows="4"
+                  placeholder="Nhập mô tả chi tiết về sản phẩm..."
                 />
               </div>
 

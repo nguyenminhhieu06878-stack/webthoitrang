@@ -1,6 +1,7 @@
 import express from 'express'
 import { Op } from 'sequelize'
 import Product from '../models/Product.js'
+import { protect, adminOnly } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -56,34 +57,44 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// Create product (Admin only - add auth middleware later)
-router.post('/', async (req, res) => {
+// Create product (Admin only)
+router.post('/', protect, adminOnly, async (req, res) => {
   try {
+    console.log('Creating product:', req.body)
     const product = await Product.create(req.body)
     res.status(201).json(product)
   } catch (error) {
+    console.error('Create product error:', error)
     res.status(400).json({ message: error.message })
   }
 })
 
-// Update product
-router.put('/:id', async (req, res) => {
+// Update product (Admin only)
+router.put('/:id', protect, adminOnly, async (req, res) => {
   try {
+    console.log('Updating product with ID:', req.params.id)
+    console.log('Update data:', req.body)
+    
     const [updated] = await Product.update(req.body, {
       where: { id: req.params.id }
     })
+    
     if (!updated) {
       return res.status(404).json({ message: 'Product not found' })
     }
+    
     const product = await Product.findByPk(req.params.id)
+    console.log('Updated product:', product.toJSON())
+    
     res.json(product)
   } catch (error) {
+    console.error('Update product error:', error)
     res.status(400).json({ message: error.message })
   }
 })
 
-// Delete product
-router.delete('/:id', async (req, res) => {
+// Delete product (Admin only)
+router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const deleted = await Product.destroy({
       where: { id: req.params.id }

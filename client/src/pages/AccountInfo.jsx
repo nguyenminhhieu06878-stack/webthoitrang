@@ -22,21 +22,22 @@ const AccountInfo = () => {
           <div className="bank-info">
             <div className="bank-logo">
               <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-                <text x="10" y="35" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" fill="#e31e24">
-                  TECHCOM
+                <text x="10" y="35" fontFamily="Arial, sans-serif" fontSize="28" fontWeight="bold" fill="#1e88e5">
+                  MB
                 </text>
-                <text x="130" y="35" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" fill="#1a1a1a">
+                <text x="60" y="35" fontFamily="Arial, sans-serif" fontSize="20" fontWeight="bold" fill="#1a1a1a">
                   BANK
                 </text>
-                <rect x="175" y="15" width="15" height="15" fill="#e31e24" transform="rotate(45 182.5 22.5)"/>
-                <rect x="185" y="15" width="15" height="15" fill="#e31e24" transform="rotate(45 192.5 22.5)"/>
+                <circle cx="150" cy="22" r="8" fill="#1e88e5"/>
+                <circle cx="170" cy="22" r="8" fill="#42a5f5"/>
+                <circle cx="190" cy="22" r="8" fill="#64b5f6"/>
               </svg>
             </div>
 
             <div className="bank-details">
-              <h2 className="company-name">Công Ty TNHH Thời Trang Khang Khôi</h2>
-              <p className="account-number">Số tài khoản: <strong>478888</strong></p>
-              <p className="bank-name">Ngân hàng Techcombank - Ngân hàng Thương mại Cổ phần Kỹ thương Việt Nam</p>
+              <h2 className="company-name">D'Chic Fashion</h2>
+              <p className="account-number">Số tài khoản: <strong>228824012004</strong></p>
+              <p className="bank-name">Ngân hàng TMCP Quân đội (MB Bank) - Chi nhánh Hà Nội</p>
             </div>
           </div>
         </div>
